@@ -1,0 +1,34 @@
+= suln
+:toc: left
+:sectnums:
+
+`suln` is a CLI that prints surroundings of line number.
+
+== Usage
+
+[source,bash]
+----
+grep -nH 'grep -nH' README.adoc | suln -C 1
+grep -nH 'grep -nH' README.adoc | suln -B 1
+grep -nH 'grep -nH' README.adoc | suln -A 1
+----
+
+== Installation
+
+TODO
+
+== LICENSE
+
+MIT
+
+== For developer
+
+TODO
+
+=== Build
+
+TODO
+
+=== Test
+
+TODO
