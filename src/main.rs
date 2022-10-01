@@ -21,9 +21,15 @@ fn main() {
                 panic!("error {:?}", e)
             }
         };
-        let cols: Vec<&str> = line.split(":").collect();
-        let file_name = cols[0];
-        let line_num: u64 = cols[1].parse().unwrap();
+        let l = linestring::parse_line_prefix(line);
+        let l = match l {
+            Ok(f) => f,
+            Err(e) => {
+                panic!("error {:?}", e)
+            }
+        };
+        let file_name = l.0;
+        let line_num: u64 = l.1;
         line_nums.push(line_num);
 
         if before_file_name == "" {

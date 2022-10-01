@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::io::{BufRead, BufReader, Error, Read};
+use std::num::ParseIntError;
 
 #[derive(Debug, PartialEq)]
 pub struct LineString {
@@ -55,6 +56,19 @@ pub fn readline_surround_of_line_number(
     vec.sort_by(|a, b| a.0.cmp(&b.0));
 
     Ok(vec)
+}
+
+pub fn parse_line_prefix(line: String) -> Result<(String, u64), ParseIntError> {
+    // TODO: may crash when a file name contains ':'.
+    let cols: Vec<&str> = line.split(":").collect();
+    let file_name = cols[0];
+    let line_num = cols[1].parse();
+    let line_num = match line_num {
+        Ok(v) => v,
+        Err(e) => return Err(e),
+    };
+
+    Ok((file_name.to_string(), line_num))
 }
 
 #[cfg(test)]
@@ -161,5 +175,17 @@ mod tests {
             ),
         ];
         assert_eq!(got.ok(), Some(want));
+    }
+
+    #[test]
+    fn test_parse_line_prefix_ok() {
+        let got = parse_line_prefix("README.adoc:1".to_string());
+        assert_eq!(got.ok(), Some(("README.adoc".to_string(), 1)));
+    }
+
+    #[test]
+    fn test_parse_line_prefix_err() {
+        let got = parse_line_prefix("README.adoc:x".to_string());
+        assert_eq!(got.ok(), None);
     }
 }
