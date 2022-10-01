@@ -1,11 +1,20 @@
 mod cli;
 mod linestring;
+mod log;
 
 use std::fs::File;
 use std::io::{self, BufRead};
 
 use clap::Parser;
 use cli::Cli;
+
+use log::err_exit;
+
+static CMD: &str = "suln";
+const ERR_CODE_READ_STDIN: i32 = 1;
+const ERR_CODE_PARSE_LINE_NUMBER: i32 = 2;
+const ERR_CODE_OPEN_FILE: i32 = 3;
+const ERR_CODE_READ_LINES: i32 = 4;
 
 fn main() {
     let args = Cli::parse();
@@ -17,16 +26,16 @@ fn main() {
     for line in stdin.lock().lines() {
         let line = match line {
             Ok(f) => f,
-            Err(e) => {
-                panic!("error {:?}", e)
-            }
+            Err(e) => err_exit("failed to read stdin.", &e, ERR_CODE_READ_STDIN),
         };
         let l = linestring::parse_line_prefix(line);
         let l = match l {
             Ok(f) => f,
-            Err(e) => {
-                panic!("error {:?}", e)
-            }
+            Err(e) => err_exit(
+                "failed to parse line number.",
+                &e,
+                ERR_CODE_PARSE_LINE_NUMBER,
+            ),
         };
         let file_name = l.0;
         let line_num: u64 = l.1;
@@ -56,10 +65,7 @@ fn run(file_name: &String, line_nums: &Vec<u64>, before_context: u64, after_cont
     let file = File::open(&file_name);
     let mut file = match file {
         Ok(f) => f,
-        Err(e) => {
-            // TODO
-            panic!("error {:?}", e)
-        }
+        Err(e) => err_exit("failed to open file.", &e, ERR_CODE_OPEN_FILE),
     };
 
     let lines = linestring::readline_surround_of_line_number(
@@ -70,9 +76,7 @@ fn run(file_name: &String, line_nums: &Vec<u64>, before_context: u64, after_cont
     );
     let lines = match lines {
         Ok(f) => f,
-        Err(e) => {
-            panic!("error {:?}", e)
-        }
+        Err(e) => err_exit("failed to raed lines.", &e, ERR_CODE_READ_LINES),
     };
     for (_, line) in lines {
         println!("{}:{}:{}", &file_name, line.line_num, line.line);
