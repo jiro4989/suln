@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::io::{BufRead, BufReader, Error};
+use std::io::{BufRead, BufReader, Error, Read};
 
 #[derive(Debug, PartialEq)]
 pub struct LineString {
@@ -9,7 +9,7 @@ pub struct LineString {
 }
 
 pub fn readline_surround_of_line_number(
-    inner: &mut dyn BufRead,
+    inner: &mut dyn Read,
     line_nums: &Vec<u64>,
     before_line_count: u64,
     after_line_count: u64,
