@@ -61,7 +61,7 @@ pub fn readline_surround_of_line_number(
 
 pub fn parse_line_prefix(line: String) -> Result<(String, u64, bool), ParseIntError> {
     // TODO: may crash when a file name contains ':'.
-    let cols: Vec<&str> = line.split(":").collect();
+    let cols: Vec<&str> = line.split(&[':', '-'][..]).collect();
     let file_name = cols[0];
     if !Path::new(file_name).exists() {
         return Ok(("".to_string(), 99, false));
@@ -186,6 +186,12 @@ mod tests {
     fn test_parse_line_prefix_ok() {
         let got = parse_line_prefix("README.adoc:1".to_string());
         assert_eq!(got.ok(), Some(("README.adoc".to_string(), 1, true)));
+    }
+
+    #[test]
+    fn test_parse_line_prefix_with_hyphen() {
+        let got = parse_line_prefix("README.adoc-3-".to_string());
+        assert_eq!(got.ok(), Some(("README.adoc".to_string(), 3, true)));
     }
 
     #[test]
