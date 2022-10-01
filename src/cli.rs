@@ -36,3 +36,68 @@ impl Cli {
         (before_context, after_context)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_adjust_none_only() {
+        let c = Cli {
+            before_context: None,
+            after_context: None,
+            context: None,
+        };
+        let (b, a) = c.adjust();
+        assert_eq!(b, 0);
+        assert_eq!(a, 0);
+    }
+
+    #[test]
+    fn test_adjust_before_context_only() {
+        let c = Cli {
+            before_context: Some(1),
+            after_context: None,
+            context: None,
+        };
+        let (b, a) = c.adjust();
+        assert_eq!(b, 1);
+        assert_eq!(a, 0);
+    }
+
+    #[test]
+    fn test_adjust_after_context_only() {
+        let c = Cli {
+            before_context: None,
+            after_context: Some(1),
+            context: None,
+        };
+        let (b, a) = c.adjust();
+        assert_eq!(b, 0);
+        assert_eq!(a, 1);
+    }
+
+    #[test]
+    fn test_adjust_context_only() {
+        let c = Cli {
+            before_context: None,
+            after_context: None,
+            context: Some(2),
+        };
+        let (b, a) = c.adjust();
+        assert_eq!(b, 2);
+        assert_eq!(a, 2);
+    }
+
+    #[test]
+    fn test_adjust_all_fields() {
+        let c = Cli {
+            before_context: Some(1),
+            after_context: Some(2),
+            context: Some(3),
+        };
+        let (b, a) = c.adjust();
+        assert_eq!(b, 1);
+        assert_eq!(a, 2);
+    }
+}
