@@ -37,6 +37,9 @@ fn main() {
                 ERR_CODE_PARSE_LINE_NUMBER,
             ),
         };
+        if !l.2 {
+            continue;
+        }
         let file_name = l.0;
         let line_num: u64 = l.1;
         line_nums.push(line_num);

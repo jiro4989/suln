@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use std::io::{BufRead, BufReader, Error, Read};
 use std::num::ParseIntError;
+use std::path::Path;
 
 #[derive(Debug, PartialEq)]
 pub struct LineString {
@@ -58,17 +59,21 @@ pub fn readline_surround_of_line_number(
     Ok(vec)
 }
 
-pub fn parse_line_prefix(line: String) -> Result<(String, u64), ParseIntError> {
+pub fn parse_line_prefix(line: String) -> Result<(String, u64, bool), ParseIntError> {
     // TODO: may crash when a file name contains ':'.
     let cols: Vec<&str> = line.split(":").collect();
     let file_name = cols[0];
+    if !Path::new(file_name).exists() {
+        return Ok(("".to_string(), 99, false));
+    }
     let line_num = cols[1].parse();
+    if Path::new(file_name).exists() {}
     let line_num = match line_num {
         Ok(v) => v,
         Err(e) => return Err(e),
     };
 
-    Ok((file_name.to_string(), line_num))
+    Ok((file_name.to_string(), line_num, true))
 }
 
 #[cfg(test)]
@@ -180,7 +185,13 @@ mod tests {
     #[test]
     fn test_parse_line_prefix_ok() {
         let got = parse_line_prefix("README.adoc:1".to_string());
-        assert_eq!(got.ok(), Some(("README.adoc".to_string(), 1)));
+        assert_eq!(got.ok(), Some(("README.adoc".to_string(), 1, true)));
+    }
+
+    #[test]
+    fn test_parse_line_prefix_not_exists_file() {
+        let got = parse_line_prefix("---".to_string());
+        assert_eq!(got.ok(), Some(("".to_string(), 99, false)));
     }
 
     #[test]
