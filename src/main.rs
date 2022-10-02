@@ -13,9 +13,8 @@ use log::err_exit;
 
 static CMD: &str = "suln";
 const ERR_CODE_READ_STDIN: i32 = 1;
-//const ERR_CODE_PARSE_LINE_NUMBER: i32 = 2;
-const ERR_CODE_OPEN_FILE: i32 = 3;
-const ERR_CODE_READ_LINES: i32 = 4;
+const ERR_CODE_OPEN_FILE: i32 = 2;
+const ERR_CODE_READ_LINES: i32 = 3;
 
 fn main() {
     let args = Cli::parse();
