@@ -29,20 +29,13 @@ fn main() {
             Ok(f) => f,
             Err(e) => err_exit("failed to read stdin.", &e, ERR_CODE_READ_STDIN),
         };
-        let l = linestring::parse_line_prefix(line);
-        let l = match l {
-            Ok(f) => f,
-            Err(e) => err_exit(
-                "failed to parse line number.",
-                &e,
-                ERR_CODE_PARSE_LINE_NUMBER,
-            ),
-        };
-        if !l.2 {
+        let l = lineparser::parse(&line);
+        if l.is_none() {
             continue;
         }
-        let file_name = l.0;
-        let line_num: u64 = l.1;
+        let l = l.unwrap();
+        let file_name = l.file_name;
+        let line_num: u64 = l.line_num;
         line_nums.push(line_num);
 
         if before_file_name == "" {

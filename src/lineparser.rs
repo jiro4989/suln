@@ -9,39 +9,24 @@ lazy_static! {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct LineParser {
-    // filename-1-
-    hyphenLine: Option<FileLine>,
-    // filename:1:
-    coronLine: Option<FileLine>,
+pub struct FileLine {
+    pub file_name: String,
+    pub line_num: u64,
 }
 
-#[derive(Debug, PartialEq)]
-struct FileLine {
-    file_name: String,
-    line_num: u64,
-}
-
-impl LineParser {
-    pub fn parse(&mut self, text: &String) {
-        // if let Some(v) = self.hyphenLine {
-        //     // self.hyphenLine = Some(FileLine {});
-        //     return;
-        // }
-
-        // Parsing is the first time if hyphenLine does not exists.
-        self.hyphenLine = parse(&COLON_LINE_NUMBER, text);
+pub fn parse(text: &String) -> Option<FileLine> {
+    if let Some(_) = COLON_LINE_NUMBER.find(text) {
+        return _parse(&COLON_LINE_NUMBER, text);
     }
+    if let Some(_) = HYPHEN_LINE_NUMBER.find(text) {
+        return _parse(&HYPHEN_LINE_NUMBER, text);
+    }
+    None
 }
 
-fn parse(re: &Regex, text: &String) -> Option<FileLine> {
-    let found = re.find_iter(text);
+fn _parse(re: &Regex, text: &String) -> Option<FileLine> {
     let matches = re.find_iter(text);
-    for (pos, mat) in matches.enumerate() {
-        // enumerate index is starts with 0.
-        // but captures need 1.
-        let pos = pos + 1;
-
+    for mat in matches {
         let start_pos = mat.start();
         let file_name = text.get(0..start_pos).unwrap();
         if !Path::new(file_name).exists() {
@@ -72,7 +57,7 @@ mod tests {
     #[test]
     fn test_parse_normal_file() {
         let text = String::from("testdata/sample1.txt:1:hello world");
-        let got = parse(&COLON_LINE_NUMBER, &text);
+        let got = _parse(&COLON_LINE_NUMBER, &text);
         let want = Some(FileLine {
             file_name: "testdata/sample1.txt".to_string(),
             line_num: 1,
@@ -83,7 +68,7 @@ mod tests {
     #[test]
     fn test_parse_colon_file() {
         let text = String::from("testdata/sam:9:ple1.txt:1:sushi");
-        let got = parse(&COLON_LINE_NUMBER, &text);
+        let got = _parse(&COLON_LINE_NUMBER, &text);
         let want = Some(FileLine {
             file_name: "testdata/sam:9:ple1.txt".to_string(),
             line_num: 1,
@@ -94,7 +79,7 @@ mod tests {
     #[test]
     fn test_parse_colon_multibyte_file() {
         let text = String::from("testdata/サンプ:9:ル1.txt:1:sushi");
-        let got = parse(&COLON_LINE_NUMBER, &text);
+        let got = _parse(&COLON_LINE_NUMBER, &text);
         let want = Some(FileLine {
             file_name: "testdata/サンプ:9:ル1.txt".to_string(),
             line_num: 1,
