@@ -29,7 +29,7 @@ fn _parse(re: &Regex, text: &String) -> Option<FileLine> {
     for mat in matches {
         let start_pos = mat.start();
         let file_name = text.get(0..start_pos).unwrap();
-        if !Path::new(file_name).exists() {
+        if !Path::new(file_name).is_file() {
             // check next matches if file_name does not exist.
             continue;
         }
