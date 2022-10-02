@@ -131,7 +131,10 @@ testdata/example.json:13:    "id": 31,
 
 == Installation
 
-TODO
+[source,bash]
+----
+$ cargo install suln
+----
 
 == LICENSE
 
