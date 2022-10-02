@@ -1,6 +1,6 @@
 [package]
 name = "suln"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["jiro"]
 description = "`suln` is a CLI that prints surroundings of line number with `grep`."
