@@ -1,7 +1,7 @@
 mod cli;
 mod lineparser;
-mod linestring;
 mod log;
+mod numberline;
 
 use std::fs::File;
 use std::io::{self, BufRead};
@@ -65,7 +65,7 @@ fn run(file_name: &String, line_nums: &Vec<u64>, before_context: u64, after_cont
         Err(e) => err_exit("failed to open file.", &e, ERR_CODE_OPEN_FILE),
     };
 
-    let lines = linestring::readline_surround_of_line_number(
+    let lines = numberline::readline_surround_of_line_number(
         &mut file,
         &line_nums,
         before_context,
