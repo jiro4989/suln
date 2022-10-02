@@ -136,6 +136,10 @@ testdata/example.json:13:    "id": 31,
 $ cargo install suln
 ----
 
+Or, you can download and install from https://github.com/jiro4989/suln/releases[GitHub Releases].
+
+https://github.com/jiro4989/suln/releases
+
 == LICENSE
 
 MIT
