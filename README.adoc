@@ -138,8 +138,6 @@ $ cargo install suln
 
 Or, you can download and install from https://github.com/jiro4989/suln/releases[GitHub Releases].
 
-https://github.com/jiro4989/suln/releases
-
 == LICENSE
 
 MIT
