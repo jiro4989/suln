@@ -1,4 +1,4 @@
-# sule
+# suln
 
 `suln` is a CLI that prints surroundings of line number with `grep`.
 
