@@ -55,6 +55,35 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_parse_hyphen() {
+        let text = String::from("testdata/a-b-c.txt-1--1-hello");
+        let got = parse(&text);
+        let want = Some(FileLine {
+            file_name: "testdata/a-b-c.txt".to_string(),
+            line_num: 1,
+        });
+        assert_eq!(got, want);
+    }
+
+    #[test]
+    fn test_parse_colon() {
+        let text = String::from("testdata/a-b-c.txt:2::2:world");
+        let got = parse(&text);
+        let want = Some(FileLine {
+            file_name: "testdata/a-b-c.txt".to_string(),
+            line_num: 2,
+        });
+        assert_eq!(got, want);
+    }
+
+    #[test]
+    fn test_parse_none() {
+        let text = String::from("---");
+        let got = parse(&text);
+        assert_eq!(got, None);
+    }
+
+    #[test]
     fn test_parse_normal_file() {
         let text = String::from("testdata/sample1.txt:1:hello world");
         let got = _parse(&COLON_LINE_NUMBER, &text);
@@ -85,5 +114,12 @@ mod tests {
             line_num: 1,
         });
         assert_eq!(got, want);
+    }
+
+    #[test]
+    fn test_parse_none2() {
+        let text = String::from("---");
+        let got = _parse(&COLON_LINE_NUMBER, &text);
+        assert_eq!(got, None);
     }
 }
