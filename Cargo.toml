@@ -2,6 +2,14 @@
 name = "suln"
 version = "0.1.0"
 edition = "2021"
+authors = ["jiro"]
+description = "`suln` is a CLI that prints surroundings of line number with `grep`."
+keywords = ["grep", "cli", "util"]
+documentation = "https://github.com/jiro4989/suln"
+homepage = "https://github.com/jiro4989/suln"
+repository = "https://github.com/jiro4989/suln"
+readme = "README.adoc"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
