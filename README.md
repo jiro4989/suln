@@ -2,6 +2,8 @@
 
 `suln` is a CLI that prints surroundings of line number with `grep`.
 
+![demo](./docs/demo.png)
+
 ## Usage
 
 Basic usage is:
