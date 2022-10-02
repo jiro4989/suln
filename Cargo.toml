@@ -8,7 +8,7 @@ keywords = ["grep", "cli", "util"]
 documentation = "https://github.com/jiro4989/suln"
 homepage = "https://github.com/jiro4989/suln"
 repository = "https://github.com/jiro4989/suln"
-readme = "README.adoc"
+readme = "README.md"
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
