@@ -1,11 +1,9 @@
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::io::{BufRead, BufReader, Error, Read};
-use std::num::ParseIntError;
-use std::path::Path;
 
 #[derive(Debug, PartialEq)]
-pub struct LineString {
+pub struct NumberLine {
     pub line_num: u64,
     pub line: String,
 }
@@ -15,9 +13,9 @@ pub fn readline_surround_of_line_number(
     line_nums: &Vec<u64>,
     before_line_count: u64,
     after_line_count: u64,
-) -> Result<Vec<(u64, LineString)>, Error> {
+) -> Result<Vec<(u64, NumberLine)>, Error> {
     // use HashMap to remove duplicated lines.
-    let mut captured_lines: HashMap<u64, LineString> = HashMap::new();
+    let mut captured_lines: HashMap<u64, NumberLine> = HashMap::new();
 
     let reader = BufReader::new(inner);
     for (i, line) in reader.lines().enumerate() {
@@ -43,7 +41,7 @@ pub fn readline_surround_of_line_number(
                 continue;
             }
 
-            let fl = LineString {
+            let fl = NumberLine {
                 line_num: i,
                 line: line.clone(),
             };
@@ -74,21 +72,21 @@ mod tests {
         let want = vec![
             (
                 1,
-                LineString {
+                NumberLine {
                     line_num: 1,
                     line: "hello".to_string(),
                 },
             ),
             (
                 2,
-                LineString {
+                NumberLine {
                     line_num: 2,
                     line: "world".to_string(),
                 },
             ),
             (
                 3,
-                LineString {
+                NumberLine {
                     line_num: 3,
                     line: "foobar".to_string(),
                 },
@@ -104,14 +102,14 @@ mod tests {
         let want = vec![
             (
                 2,
-                LineString {
+                NumberLine {
                     line_num: 2,
                     line: "world".to_string(),
                 },
             ),
             (
                 3,
-                LineString {
+                NumberLine {
                     line_num: 3,
                     line: "foobar".to_string(),
                 },
@@ -126,7 +124,7 @@ mod tests {
         let got = readline_surround_of_line_number(&mut inner, &vec![3u64], 0u64, 0u64);
         let want = vec![(
             3,
-            LineString {
+            NumberLine {
                 line_num: 3,
                 line: "foobar".to_string(),
             },
@@ -142,21 +140,21 @@ mod tests {
         let want = vec![
             (
                 1,
-                LineString {
+                NumberLine {
                     line_num: 1,
                     line: "hello".to_string(),
                 },
             ),
             (
                 2,
-                LineString {
+                NumberLine {
                     line_num: 2,
                     line: "world".to_string(),
                 },
             ),
             (
                 3,
-                LineString {
+                NumberLine {
                     line_num: 3,
                     line: "foobar".to_string(),
                 },
