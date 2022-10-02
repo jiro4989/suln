@@ -1,0 +1,70 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  APP_NAME: suln
+
+jobs:
+  release-unix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            ext: tar.gz
+          - target: x86_64-apple-darwin
+            os: macOS-latest
+            ext: tar.gz
+          # TODO: windows
+
+    steps:
+      - name: Set envs
+        id: vars
+        run: |
+          echo ::set-output name=ver::${GITHUB_REF/refs\/tags\/v/}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install musl-gcc if required
+        if: contains(matrix.target, 'musl')
+        run: |
+          sudo apt-get install musl-tools
+
+      - name: Compile for musl
+        if: contains(matrix.target, 'musl')
+        run: |
+          rustup target add ${{ matrix.target }}
+          CC="musl-gcc -static" cargo build --verbose --release --target ${{ matrix.target }}
+
+      - name: Compile
+        if: "! contains(matrix.target, 'musl')"
+        run: |
+          rustup target add ${{ matrix.target }}
+          cargo build --verbose --release --target ${{ matrix.target }}
+
+      - name: Build package
+        id: pkg
+        run: |
+          pkg=${{ env.APP_NAME }}-${{ steps.vars.outputs.ver }}-${{ matrix.target }}
+          mkdir -p "${pkg}"
+          mv target/${{ matrix.target }}/release/${{ env.APP_NAME }} "${pkg}/"
+          mv LICENSE "${pkg}/"
+          mv README.* "${pkg}/"
+          release="${pkg}.tar.gz"
+          tar czf "${release}" "${pkg}/"
+          echo ::set-output name=release::"${release}"
+
+      - name: Release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.pkg.outputs.release }}
+          asset_name: ${{ steps.pkg.outputs.release }}
+          tag: ${{ github.ref }}
+          overwrite: true
