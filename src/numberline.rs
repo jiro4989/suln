@@ -32,6 +32,7 @@ pub fn readline_surround_of_line_number(
             // e.g. 1..5 and 3..7
             let num_range = (line_num - before_line_count)..(line_num + after_line_count + 1);
 
+            // TODO: レンジの末尾を超えた値が見つかったら早期終了する
             if !num_range.contains(&i) {
                 continue;
             }
