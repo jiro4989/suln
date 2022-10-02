@@ -1,4 +1,5 @@
 mod cli;
+mod lineparser;
 mod linestring;
 mod log;
 
