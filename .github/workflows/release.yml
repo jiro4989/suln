@@ -26,7 +26,7 @@ jobs:
       - name: Set envs
         id: vars
         run: |
-          echo ::set-output name=ver::${GITHUB_REF/refs\/tags\/v/}
+          echo ver=${GITHUB_REF/refs\/tags\/v/} >> ${GITHUB_OUTPUT}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -58,7 +58,7 @@ jobs:
           mv README.* "${pkg}/"
           release="${pkg}.tar.gz"
           tar czf "${release}" "${pkg}/"
-          echo ::set-output name=release::"${release}"
+          echo release=${release} >> ${GITHUB_OUTPUT}
 
       - name: Release
         uses: svenstaro/upload-release-action@v1-release
